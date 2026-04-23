@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F2A45">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Oracle Fusion — מדריך זכאים וחשבוניות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --navy:#0F2A45;--navy-mid:#1B4F72;
+  --blue:#2E86C1;--blue-lt:#D6EAF8;--blue-pal:#EBF5FB;
+  --orange:#E67E22;--orange-lt:#FAD7A0;--orange-bg:#FEF5E7;
+  --teal:#148F77;--teal-lt:#D1F2EB;
+  --amber:#B7770D;--amber-bg:#FEF9E7;
+  --red:#C0392B;--red-bg:#FDEDEC;
+  --purple:#6C3483;--purple-bg:#F4ECF7;
+  --text:#1C2833;--muted:#5D6D7E;
+  --border:#D5D8DC;--bg:#F0F3F4;--surface:#FFFFFF;
+  --header-h:56px;--bottom-h:64px;--sidebar-w:280px;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;overscroll-behavior:none;}
+body{font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);background:var(--bg);direction:rtl;overflow:hidden;}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+
+/* HEADER */
+.header{height:calc(var(--header-h) + var(--sat));padding-top:var(--sat);background:var(--navy);display:flex;align-items:center;padding-right:16px;padding-left:16px;gap:12px;flex-shrink:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.hlogo{font-size:17px;font-weight:800;color:#fff;white-space:nowrap;}
+.hlogo span{color:var(--orange-lt);}
+.hsep{width:1px;height:24px;background:rgba(255,255,255,.2);}
+.hsub{font-size:12px;color:var(--orange-lt);font-weight:400;flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.hbadge{background:rgba(255,255,255,.12);color:var(--orange-lt);font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700;flex-shrink:0;}
+
+.body-split{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:50;}
+.si{padding:12px 0 24px;}
+.ng{margin-bottom:4px;}
+.ngl{padding:8px 16px 4px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.ni{display:flex;align-items:center;width:100%;padding:10px 16px;font-size:13px;color:#4A5568;cursor:pointer;border:none;border-right:3px solid transparent;background:none;font-family:'Heebo',sans-serif;text-align:right;transition:background .12s,color .12s,border-color .12s;gap:8px;min-height:44px;user-select:none;}
+.ni:hover{background:var(--blue-pal);color:var(--blue);}
+.ni:active{background:var(--blue-lt);}
+.ni.active{background:var(--blue-lt);color:var(--navy-mid);font-weight:700;border-right-color:var(--orange);}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:20px 24px 48px;min-width:0;-webkit-overflow-scrolling:touch;}
+
+/* SECTION BANNER */
+.sb{display:flex;align-items:stretch;border-radius:10px;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.sb-n{background:var(--navy);color:#fff;font-size:22px;font-weight:800;min-width:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-t{background:var(--orange);color:#fff;font-size:16px;font-weight:700;padding:14px 16px;flex:1;display:flex;align-items:center;}
+
+/* STEPPER */
+.stepper{display:flex;align-items:center;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.stepper::-webkit-scrollbar{display:none;}
+.ss{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;padding:0 6px;}
+.sd{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#E0E0E0;color:#888;border:2px solid #E0E0E0;z-index:1;transition:background .2s;}
+.ss.active .sd{background:var(--orange);border-color:var(--orange);color:#fff;}
+.ss.done .sd{background:var(--navy-mid);border-color:var(--navy-mid);color:#fff;}
+.sl-txt{font-size:10px;color:var(--muted);white-space:nowrap;font-weight:500;}
+.ss.active .sl-txt{color:var(--orange);font-weight:700;}
+.ss.done .sl-txt{color:var(--navy-mid);}
+.sline{flex:1;height:2px;background:#E0E0E0;min-width:12px;}
+.sline.done{background:var(--navy-mid);}
+
+/* NAV BOX */
+.nb{background:var(--blue-lt);border:1px solid #AED6F1;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;}
+.nb-lbl{font-weight:700;color:var(--blue);display:block;margin-bottom:3px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+.nb-path{font-weight:700;color:var(--navy-mid);direction:ltr;unicode-bidi:embed;word-break:break-all;}
+
+/* INFO BOXES */
+.ib{border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;border:1px solid;line-height:1.55;}
+.ib-lbl{font-weight:700;display:block;margin-bottom:2px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+.ib-tip{background:var(--teal-lt);border-color:#82E0AA;color:#0E6655;}
+.ib-warn{background:var(--red-bg);border-color:#F1948A;color:#922B21;}
+.ib-note{background:var(--blue-lt);border-color:#AED6F1;color:var(--navy-mid);}
+.ib-crit{background:var(--red-bg);border-color:var(--red);color:#922B21;border-width:2px;}
+.ib-amber{background:var(--amber-bg);border-color:#F9E79F;color:var(--amber);}
+
+/* ACCORDION */
+.ac{margin-bottom:14px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.ac-item{border-bottom:1px solid var(--border);}
+.ac-item:last-child{border-bottom:none;}
+.ac-t{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);cursor:pointer;min-height:44px;user-select:none;font-weight:700;font-size:13px;color:var(--navy-mid);gap:8px;transition:background .12s;width:100%;border:none;font-family:'Heebo',sans-serif;text-align:right;}
+.ac-t:hover{background:var(--blue-pal);}
+.ac-t.open{background:var(--blue-lt);}
+.ac-arr{font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s;}
+.ac-t.open .ac-arr{transform:rotate(180deg);}
+.ac-b{display:none;padding:10px 14px 12px;font-size:13px;color:var(--text);line-height:1.6;background:var(--surface);border-top:1px solid var(--border);}
+.ac-b.open{display:block;}
+
+/* STEP CARDS */
+.sl{margin-bottom:14px;}
+.sc{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-size:13px;line-height:1.6;}
+.snum{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.stxt{flex:1;}
+
+/* MATCH CARDS */
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.mc{border-radius:10px;padding:14px;border:1px solid;}
+.m2{background:#EBF5FB;border-color:#AED6F1;}
+.m3{background:var(--purple-bg);border-color:#C39BD3;}
+.mbadge{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;margin-bottom:6px;}
+.b2{background:var(--blue);color:#fff;}
+.b3{background:var(--purple);color:#fff;}
+.mv{display:flex;align-items:center;justify-content:space-around;background:rgba(255,255,255,.6);border-radius:6px;padding:6px;margin:6px 0;font-size:11px;font-weight:700;color:var(--navy-mid);}
+.marr{color:var(--blue);font-size:14px;}
+
+/* FLOW (rישום steps) */
+.flow{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.flow-s{display:flex;gap:12px;align-items:stretch;}
+.flow-dc{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.flow-c{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.flow-ln{width:2px;flex:1;background:var(--border);margin:4px 0;}
+.flow-body{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.55;}
+.flow-title{font-weight:700;font-size:12px;margin-bottom:4px;}
+
+/* DASHBOARD */
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.dc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 10px;text-align:center;cursor:pointer;transition:box-shadow .15s,transform .15s;min-height:44px;user-select:none;}
+.dc:active{transform:scale(.97);}
+.di{font-size:26px;margin-bottom:6px;}
+.dt{font-size:12px;font-weight:700;color:var(--navy-mid);line-height:1.3;}
+.ds{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* KEY BOX */
+.kbox{background:var(--navy);color:#fff;border-radius:10px;padding:16px 18px;margin-top:6px;}
+.kbox h3{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--orange-lt);}
+.ki{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:12.5px;line-height:1.5;}
+.ki:last-child{border-bottom:none;}
+.kdot{color:var(--orange-lt);flex-shrink:0;}
+
+/* DUAL STEP (Self-Invoice) */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.dcard{border-radius:10px;padding:14px 12px;border:1px solid;position:relative;}
+.dnum{position:absolute;top:-10px;right:-6px;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dttl{font-size:12px;font-weight:700;margin-bottom:8px;text-align:center;}
+.ditem{display:flex;gap:6px;font-size:12px;line-height:1.5;margin-bottom:4px;}
+.dar{background:#EBF5FB;border-color:#AED6F1;}.dar .dnum{background:var(--blue);}.dar .dttl{color:var(--navy-mid);}
+.dap{background:var(--amber-bg);border-color:#F9E79F;}.dap .dnum{background:var(--orange);}.dap .dttl{color:var(--amber);}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.chip{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--navy-mid);}
+
+/* MISC */
+code{background:var(--blue-pal);color:var(--navy-mid);font-family:'Courier New',monospace;font-size:12px;padding:2px 5px;border-radius:4px;font-weight:600;word-break:break-all;}
+h2.sec{font-size:14px;font-weight:700;color:var(--orange);margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--orange-lt);}
+p.lead{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:12px;}
+
+/* BOTTOM NAV */
+.bnav{display:none;height:calc(var(--bottom-h) + var(--sab));padding-bottom:var(--sab);background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
+.btabs{display:flex;height:var(--bottom-h);}
+.btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:6px 2px;border:none;background:none;color:var(--muted);font-family:'Heebo',sans-serif;transition:color .15s;min-width:0;}
+.btab:active{background:var(--blue-pal);}
+.btab.active{color:var(--orange);}
+.bti{font-size:20px;line-height:1;}
+.btl{font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 2px;}
+
+/* DRAWER */
+.dov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;}
+.dov.open{display:block;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(var(--sidebar-w),85vw);background:var(--surface);z-index:210;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-top:var(--sat);}
+.drawer.open{transform:translateX(0);}
+.dh{padding:16px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;}
+.dht{font-size:14px;font-weight:700;color:#fff;}
+.dhc{background:none;border:none;color:var(--orange-lt);font-size:22px;cursor:pointer;padding:4px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.fi{animation:fadeUp .2s ease;}
+
+.sidebar::-webkit-scrollbar,.main::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb,.main::-webkit-scrollbar-thumb{background:#CBD5E0;border-radius:4px;}
+
+@media(min-width:768px){.sidebar{display:flex;}.bnav{display:none;}.main{padding:24px 28px 48px;}.dg{grid-template-columns:repeat(3,1fr);}.mg{grid-template-columns:1fr 1fr;}.dual{grid-template-columns:1fr 1fr;}}
+@media(max-width:767px){.sidebar{display:none;}.bnav{display:flex;flex-direction:column;}.main{padding:14px 14px calc(var(--bottom-h) + var(--sab) + 14px);font-size:14px;}.dg{grid-template-columns:repeat(2,1fr);gap:8px;}.sb-t{font-size:14px;padding:12px;}.sb-n{min-width:48px;font-size:20px;}.sd{width:24px;height:24px;font-size:10px;}.sl-txt{font-size:9px;}}
+@media(max-width:359px){.mg{grid-template-columns:1fr;}.dual{grid-template-columns:1fr;}.btl{display:none;}.bti{font-size:22px;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="header">
+  <div class="hlogo">Oracle <span>Fusion</span></div>
+  <div class="hsep"></div>
+  <div class="hsub" id="headerSub">מדריך זכאים וחשבוניות — AP/AR</div>
+  <div class="hbadge">v1.0</div>
+</header>
+
+<div class="body-split">
+  <nav class="sidebar" id="sidebar"><div class="si" id="sidebarNav"></div></nav>
+  <main class="main" id="main" tabindex="-1"></main>
+</div>
+
+<nav class="bnav"><div class="btabs" id="bottomTabs"></div></nav>
+
+<div class="dov" id="dov"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <div class="dh"><span class="dht">תוכן עניינים</span><button class="dhc" id="dhc" type="button">✕</button></div>
+  <div class="si" id="drawerNav"></div>
+</div>
+
+<script>
+const NAV=[
+  {id:'dashboard',label:'בית',                  icon:'🏠',short:'בית',   group:null},
+  {id:'ap1',label:'1. יצירת חשבונית',           icon:'📄',short:'חשבונית',group:"חלק א׳: חשבוניות ותשלומים (AP)"},
+  {id:'ap2',label:'2. חשבונית מהזמנה',          icon:'📦',short:'PO',    group:null},
+  {id:'ap3',label:'3. חשבוניות מיוחדות',        icon:'📅',short:'מיוחד', group:null},
+  {id:'ap4',label:'4. תשלומים וחשבונאות',       icon:'💸',short:'תשלום', group:null},
+  {id:'ven1',label:'1. הקמת ספק',               icon:'🆕',short:'ספק',   group:"חלק ב׳: הקמת ספק (ישראל)"},
+  {id:'ven2',label:'2. לוקליזציה ומיסוי',       icon:'🇮🇱',short:'מיסוי', group:null},
+  {id:'ven3',label:'3. כתובות ובנק',            icon:'🏦',short:'בנק',   group:null},
+  {id:'ar1', label:'1. יצירת חשבונית לקוח',    icon:'📄',short:'AR',    group:"חלק ג׳: מודול לקוחות (AR)"},
+  {id:'ar2', label:'2. חשבונית עצמית',          icon:'🔄',short:'עצמית', group:null},
+];
+const BTABS=[
+  {id:'dashboard',icon:'🏠',label:'בית'},
+  {id:'ap1',      icon:'📄',label:'חשבונית'},
+  {id:'ap4',      icon:'💸',label:'תשלום'},
+  {id:'ven1',     icon:'🏢',label:'ספק'},
+  {id:'__more__', icon:'☰', label:'עוד'},
+];
+
+/* helpers */
+function nb(path){return `<div class="nb"><span class="nb-lbl">ניווט</span><span class="nb-path">${path}</span></div>`;}
+function stepper(steps,active){let h='<div class="stepper">';steps.forEach((s,i)=>{const c=i===active?'active':i<active?'done':'';h+=`<div class="ss ${c}"><div class="sd">${i<active?'✓':(i+1)}</div><div class="sl-txt">${s}</div></div>`;if(i<steps.length-1)h+=`<div class="sline${i<active?' done':''}"></div>`;});return h+'</div>';}
+function tip(t){return `<div class="ib ib-tip"><span class="ib-lbl">💡 טיפ</span>${t}</div>`;}
+function warn(t){return `<div class="ib ib-warn"><span class="ib-lbl">⚠️ שים לב</span>${t}</div>`;}
+function note(t){return `<div class="ib ib-note"><span class="ib-lbl">ℹ️ הערה</span>${t}</div>`;}
+function crit(t){return `<div class="ib ib-crit"><span class="ib-lbl">🚨 חובה קריטית</span>${t}</div>`;}
+function amber(t){return `<div class="ib ib-amber"><span class="ib-lbl">⏰ תזכורת</span>${t}</div>`;}
+function acc(rows){return `<div class="ac">${rows.map(([f,d])=>`<div class="ac-item"><button class="ac-t" onclick="ta(this)" type="button"><span>${f}</span><span class="ac-arr">▾</span></button><div class="ac-b">${d}</div></div>`).join('')}</div>`;}
+function stps(list){return `<div class="sl">${list.map(([n,t])=>`<div class="sc"><div class="snum">${n}</div><div class="stxt">${t}</div></div>`).join('')}</div>`;}
+function ta(t){t.classList.toggle('open');t.nextElementSibling.classList.toggle('open');}
+
+const PAGES={
+dashboard:()=>`
+  <div style="max-width:600px;margin:0 auto">
+    <div style="text-align:center;padding:8px 0 20px">
+      <div style="font-size:36px;margin-bottom:8px">☁️</div>
+      <h1 style="font-size:20px;font-weight:800;color:var(--navy-mid);margin-bottom:6px;line-height:1.3">מדריך Oracle Fusion<br>זכאים וחשבוניות</h1>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6">מדריך אינטראקטיבי לתהליכי AP ו-AR ב-Oracle Cloud Fusion.<br>כולל הקמת ספקים, חשבוניות ותשלומים.</p>
+    </div>
+    <div class="dg">
+      ${[{id:'ap1',icon:'📄',t:'יצירת חשבונית',s:'ניווט, שדות, רישום'},{id:'ap2',icon:'📦',t:'חשבונית מ-PO',s:'2-Way / 3-Way'},{id:'ap3',icon:'📅',t:'מיוחדות',s:'רב-תקופתית, זיכוי'},{id:'ap4',icon:'💸',t:'תשלומים',s:'תשלום + חשבונאות'},{id:'ven1',icon:'🏢',t:'הקמת ספק',s:'פרטים + עוסק מורשה'},{id:'ar1',icon:'👥',t:'חשבונית לקוח',s:'AR + עצמית'},].map(c=>`<div class="dc" data-goto="${c.id}"><div class="di">${c.icon}</div><div class="dt">${c.t}</div><div class="ds">${c.s}</div></div>`).join('')}
+    </div>
+    <div class="kbox">
+      <h3>נקודות מפתח — Oracle Fusion AP</h3>
+      ${[['ניווט ראשי','זכאים > חשבוניות > משימות > יצירת חשבונית'],['חישוב מס','פעולות חשבונית > חשב מס — חובה לפני אימות'],['אימות','פעולות > בדוק תקינות. אם "נדרש מחדש" — שחרר עיקובים'],['רישום סופי','פעולות > חשב בטיוטה > העבר לרישום בספרים'],['ניכוי במקור','מוגדר ברמת הספק — לשונית מס עסקאות'],['קובץ 874','דורש מספר עוסק מורשה מלא בכרטיס הספק'],].map(([k,v])=>`<div class="ki"><span class="kdot">▸</span><span><strong>${k}:</strong> ${v}</span></div>`).join('')}
+    </div>
+  </div>`,
+
+ap1:()=>`
+  <div class="sb"><div class="sb-n">1</div><div class="sb-t">יצירת חשבונית</div></div>
+  ${stepper(['ניווט','כותרת','שורות','מס','רישום'],0)}
+  ${nb('זכאים > חשבוניות > משימות > יצירת חשבונית')}
+  <p class="lead">מסך הזנת חשבונית ספק ב-Oracle Cloud Fusion.</p>
+
+  <h2 class="sec">1.1 · ניווט ראשוני</h2>
+  ${stps([[1,'נווט אל: <strong>זכאים > חשבוניות</strong>.'],[2,'לחץ <strong>"משימות"</strong> (פינה עליונה).'],[3,'בחר <strong>"יצירת חשבונית"</strong> מהתפריט.']])}
+
+  <h2 class="sec">1.2 · כותרת החשבונית</h2>
+  ${stepper(['ניווט','כותרת','שורות','מס','רישום'],1)}
+  ${acc([['יחידת עסק','שם היחידה העסקית שלך — חובה לבחור יחידה נכונה.'],['שם הספק','חיפוש לפי שם — פרטי האתר יתמלאו אוטומטית.'],['מספר החשבונית','מספר החשבונית של הספק — מזהה ייחודי.'],['סכום','כולל מע"מ — חייב להתאים לסכום השורות.'],['סוג חשבונית','סטנדרטי (ברירת מחדל).'],['תאריך החשבונית','תאריך חשבונית הספק המקורית.'],['תנאי תשלום','ותאריך תנאים — לפי הסכם.'],['תיאור','שדה חופשי — יופיע בדוחות ובפקודות יומן.']])}
+  ${tip('להוספת קובץ מצורף: לחץ <strong>+</strong> (סמל הוספת קובץ). לאחר מכן לחץ "שמור" לשמירת הכותרת.')}
+
+  <h2 class="sec">1.3 · מספר הקצאה ושורות</h2>
+  ${stepper(['ניווט','כותרת','שורות','מס','רישום'],2)}
+  ${note('לחץ <strong>"הצג עוד"</strong> ← מידע נוסף. שדה <strong>מספר הקצאה</strong> ייפתח רק לאחר בחירת מידע אזורי <em>"דיווח מע"מ לישראל"</em>.')}
+  ${acc([['סכום (ללא מס)','סכום השורה לפני מע"מ.'],['קומבינציית הפצות','כלל הסגמנטים — לחץ זכוכית מגדלת לפתיחת חלון. לאישור: OK.'],['קוד סיווג מס','בחר רק לשינוי מברירת המחדל (מע"מ רגיל).']])}
+
+  <h2 class="sec">1.4 · חישוב מס ואימות</h2>
+  ${stepper(['ניווט','כותרת','שורות','מס','רישום'],3)}
+  ${stps([[1,'<strong>פעולות חשבונית > חשב מס</strong>.'],[2,'גלול מטה ← מתחת לשירות ← הרחב שורות מס לוידוא.'],[3,'לשינוי סכום המע"מ: לחץ <strong>"עריכת מסים"</strong> תחת החץ של מסים.'],[4,'ודא: סכום כותרת = סכום שורות.'],[5,'<strong>פעולות חשבונית > בדוק תקינות</strong>.'],[6,'אם "נדרש אימות מחדש": פעולות > ניהול עיקובים ← שחרר ← אמת שוב.']])}
+
+  <h2 class="sec">1.5 · רישום בספרים</h2>
+  ${stepper(['ניווט','כותרת','שורות','מס','רישום'],4)}
+  <div class="flow">
+    <div class="flow-s"><div class="flow-dc"><div class="flow-c" style="background:#EBF5FB;color:var(--blue)">1</div><div class="flow-ln"></div></div><div class="flow-body"><div class="flow-title">חשב בטיוטה</div>פעולות חשבונית ← <strong>חשב בטיוטה</strong>. תופיע הודעת אישור.</div></div>
+    <div class="flow-s"><div class="flow-dc"><div class="flow-c" style="background:#D5F5E3;color:#1E8449">2</div><div class="flow-ln"></div></div><div class="flow-body"><div class="flow-title">צפה בחשבונאות</div>לחץ <strong>"צפה בחשבונאות"</strong> לאישור הרישום.</div></div>
+    <div class="flow-s"><div class="flow-dc"><div class="flow-c" style="background:#D6EAF8;color:var(--navy-mid)">3</div></div><div class="flow-body"><div class="flow-title">העבר לרישום סופי</div>פעולות ← <strong>העבר לרישום בספר חשבונות</strong>. תופיע הודעת אישור.</div></div>
+  </div>`,
+
+ap2:()=>`
+  <div class="sb"><div class="sb-n">2</div><div class="sb-t">חשבונית מהזמנת רכש (PO)</div></div>
+  ${stepper(['כותרת','מספר PO','התאמה','מס','רישום'],0)}
+  ${nb('זכאים > חשבוניות > משימות > יצירת חשבונית')}
+  <p class="lead">יצירת חשבונית על בסיס הזמנת רכש קיימת. פרטי הספק יתמלאו אוטומטית.</p>
+
+  <h2 class="sec">2.1 · כותרת</h2>
+  ${stps([[1,'הזן <strong>מספר הזמנת רכש</strong> — פרטי הספק יתמלאו אוטומטית.'],[2,'השלם <strong>מספר חשבונית</strong> של הספק.'],[3,'השלם <strong>סכום חשבונית</strong>.']])}
+
+  <h2 class="sec">2.2 · התאמת שורות</h2>
+  ${stepper(['כותרת','מספר PO','התאמה','מס','רישום'],2)}
+  ${stps([[1,'לחץ <strong>סמל התאמת שורות חשבונית</strong> (חץ בתוך עיגול).'],[2,'בחר שורות מהזמנה.'],[3,'לחץ <strong>החלה</strong> ← <strong>אישור</strong>.']])}
+  <div class="mg">
+    <div class="mc m2"><div class="mbadge b2">2-Way</div><div class="mv"><span>חשבונית</span><span class="marr">↔</span><span>הזמנה</span></div><p style="font-size:12px;color:var(--muted)">רק "הוזמן" — ללא קבלת סחורה.</p></div>
+    <div class="mc m3"><div class="mbadge b3">3-Way</div><div class="mv" style="font-size:10px"><span>חשבונית</span><span class="marr">↔</span><span>קבלה</span><span class="marr">↔</span><span>הזמנה</span></div><p style="font-size:12px;color:var(--muted)">גם "התקבל" מכיל ערך.</p></div>
+  </div>
+
+  <h2 class="sec">2.3 · סיום</h2>
+  ${stps([[1,'חשב מס: פעולות > חשב מס.'],[2,'אימות: פעולות > בדוק תקינות.'],[3,'העבר לרישום בספר חשבונות.']])}`,
+
+ap3:()=>`
+  <div class="sb"><div class="sb-n">3</div><div class="sb-t">חשבוניות מיוחדות</div></div>
+
+  <h2 class="sec">3.1 · חשבונית רב-תקופתית</h2>
+  <p class="lead">פריסת הוצאה (שכירות, ביטוח) לאורך חודשים באופן אוטומטי.</p>
+  ${acc([['תאריך התחלה רב-תקופתי','התאריך בו מתחיל השירות — בשורת החשבונית.'],['תאריך סיום רב-תקופתי','התאריך בו מסתיים השירות.'],['חשבון צבירה','חשבון המאזן (הוצאות מראש) לקליטת ההוצאה לפני פריסה.']])}
+  ${amber('בסוף כל חודש — הרץ: <strong>כלים > תהליכים מתוזמנים > תזמן תהליך > "יצירת חשבונאות רב-תקופתית"</strong>. בסיום ירוץ דוח להורדה.')}
+
+  <h2 class="sec">3.2 · חשבונית זיכוי</h2>
+  <p class="lead">כאשר ספק מחזיר כסף או מזכה על סחורה פגומה.</p>
+  ${stps([[1,'יצור חשבונית רגילה.'],[2,'בשדה <strong>סוג חשבונית</strong> — בחר <strong>"זיכוי"</strong>.'],[3,'הסכום חייב להיות <strong>מינוס (−)</strong> הן בכותרת הן בשורות.'],[4,'בדוק תקינות ← העבר לרישום.']])}
+  ${warn('הסכום חייב להיות שלילי בכל השדות — כותרת, שורות וחישוב המס.')}`,
+
+ap4:()=>`
+  <div class="sb"><div class="sb-n">4</div><div class="sb-t">תשלומים וחשבונאות</div></div>
+
+  <h2 class="sec">4.1 · תשלום חשבונית בודדת</h2>
+  ${nb('זכאים > תשלומים > יצירת תשלום')}
+  ${stps([[1,'נווט: <strong>זכאים > תשלומים > יצירת תשלום</strong>.'],[2,'יחידה עסקית: שם היחידה העסקית שלך.'],[3,'בחר <strong>ספק ואתר</strong>.'],[4,'הזן <strong>תאריך תשלום</strong>.'],[5,'בחר <strong>חשבון בנק להחזר הוצאות</strong> (חשבון משלם).'],[6,'בחר <strong>מטבע</strong>, <strong>אמצעי תשלום</strong> ומסמך תשלום.'],[7,'בחלק "חשבוניות לתשלום": לחץ <strong>+ הוספה</strong> ובחר חשבוניות.'],[8,'לחץ <strong>שמור וסגור</strong> ← ראה מספר תשלום וסכום שנוצר.']])}
+  ${warn('בדוק <strong>ניכוי במקור תקין</strong> לפני ביצוע התשלום.')}
+
+  <h2 class="sec">4.2 · הרצת חשבונאות (Batch)</h2>
+  <p class="lead">יצירת פקודות יומן לכלל החשבוניות והתשלומים שטרם עברו לספרים.</p>
+  ${nb('זכאים > חשבוניות > משימות > יצירת חשבונאות')}
+  ${stps([[1,'שנה <strong>מקור</strong> ל-<strong>"זכאים"</strong>.'],[2,'בחר <strong>ספר:</strong> ספר החשבונות הראשי.'],[3,'לחץ <strong>"שליחה"</strong>.']])}
+  ${note('ניתן להריץ תהליך זה בסוף יום עבודה — יוצר פקודות יומן לכל מה שטרם הועבר.')}`,
+
+ven1:()=>`
+  <div class="sb"><div class="sb-n">ס</div><div class="sb-t">הקמת ספק חדש</div></div>
+  ${nb('רכש > ספקים > משימות > יצירת ספק')}
+  <p class="lead">הגדרת ספק מקומי בישראל. נתוני הספק ישפיעו על חשבוניות, תשלומים ודיווחים לרשויות המס.</p>
+  ${acc([['שם הספק','הזן בעברית תקנית.'],['קשר עסקי','"מורשה להוצאה" — חובה לחשבוניות.'],['סוג ארגון מס','לרוב "תאגיד".'],['שם חלופי','שם באנגלית — <strong>UPPERCASE בלבד</strong>.']])}
+  ${crit('חובה למלא <strong>מספר עוסק מורשה</strong> (וח.פ כאשר שונה). ללא נתונים אלו הדיווח לקובץ 874 ייכשל.')}`,
+
+ven2:()=>`
+  <div class="sb"><div class="sb-n">ס</div><div class="sb-t">לוקליזציה ומיסוי — ישראל</div></div>
+  ${nb('פרופיל > ארגון > מידע אזורי > "ניכוי במקור לישראל"')}
+  ${note('יש למלא שדות ניכוי במקור. <strong>לספקי חו"ל או עיריות הפטורים מדיווח 856</strong> — יש להשאיר 4 שדות ריקים.')}
+
+  <h2 class="sec">הגדרות ניכוי במקור (WHT)</h2>
+  ${nb('לשונית מס עסקאות > פטורים מניכוי מס במקור > הוספה (+)')}
+  ${acc([['שיטת מס','IL WHT REGIME'],['בעל תצורה','שם היחידה העסקית שלך'],['מס','IL WHT TAX'],['אחוז ניכוי','לפי פקיד שומה — 0 = פטור מלא.'],['תוקף וקבוצה','תוקף הפטור וסוג השירות (עמלות, שכ"ד וכו\').']])}`,
+
+ven3:()=>`
+  <div class="sb"><div class="sb-n">ס</div><div class="sb-t">כתובות, אתרים וחשבון בנק</div></div>
+
+  <h2 class="sec">הגדרת כתובת</h2>
+  ${nb('לשונית כתובת')}
+  ${stps([[1,'בחר ארץ: <strong>ישראל</strong> + הזן כתובת מלאה.'],[2,'סמן ✓ ב<strong>"הזמנות"</strong> ו<strong>"העברת תשלום ל"</strong> תחת מטרות.']])}
+
+  <h2 class="sec">הגדרת אתר</h2>
+  ${nb('לשונית אתרים')}
+  ${stps([[1,'יחידה עסקית: שם היחידה העסקית שלך.'],[2,'הפעל שירותי רכש ותשלומים.']])}
+
+  <h2 class="sec">חשבון בנק ספק</h2>
+  ${nb('לשונית תשלומים > חשבונות בנק')}
+  <div class="chips">${['ארץ','מספר חשבון','שם בנק','סניף','מטבע'].map(i=>`<span class="chip">${i}</span>`).join('')}</div>
+  ${tip('לחץ <strong>"שמור וסגור"</strong>. ודא כתובת מייל עדכנית לשליחת הודעות תשלום.')}`,
+
+ar1:()=>`
+  <div class="sb"><div class="sb-n">ל</div><div class="sb-t">יצירת חשבונית לקוח (AR)</div></div>
+  ${nb('חייבים > חיוב > משימות > יצירת תנועה')}
+  <p class="lead">הקמת חשבונית מכירה ב-Oracle Fusion AR.</p>
+
+  <h2 class="sec">פרטי כותרת</h2>
+  ${acc([['סוג תנועה','"חשבונית" — קוד סוג תנועה של הארגון.'],['יחידה עסקית','שם היחידה העסקית שלך.'],['לקוח','בחר שם מהרשימה.'],['מספר הקצאה','לחץ "הצג עוד" > לשונית שונות > מידע אזורי > "דיווח מע"מ לישראל" ← הקלד מספר.']])}
+
+  <h2 class="sec">הזנת שורות</h2>
+  ${stps([[1,'<strong>שורת הודעה:</strong> בחר סוג שירות (דמי ניהול, עמלות). תיאור וחשבון הכנסות יימשכו אוטומטית.'],[2,'<strong>כמות:</strong> בדרך כלל 1. <strong>מחיר ליחידה:</strong> סכום לפני מע"מ.'],[3,'לחץ <strong>שמור</strong> ובדוק תקינות מס.'],[4,'<strong>בדיקת חשבונאות:</strong> פעולות > עריכת הפצות.'],[5,'לסיום: חץ ליד "השלם" ← בחר <strong>"השלם ובדוק"</strong>.']])}`,
+
+ar2:()=>`
+  <div class="sb"><div class="sb-n">ל</div><div class="sb-t">חשבונית עצמית (Self-Invoice)</div></div>
+  <p class="lead">תהליך דו-שלבי: תחילה AR ← לאחר מכן AP — לאיפוס המע"מ.</p>
+
+  <h2 class="sec">שני השלבים</h2>
+  <div class="dual">
+    <div class="dcard dar"><div class="dnum">1</div><div class="dttl">מודול לקוחות (AR)</div>
+      <div class="ditem"><span style="color:var(--blue)">▸</span><span>הקמת חשבונית לקוח.</span></div>
+      <div class="ditem"><span style="color:var(--blue)">▸</span><span><strong>סוג תנועה:</strong> ייעודי לחשבונית עצמית.</span></div>
+      <div class="ditem"><span style="color:var(--red)">⚠</span><span style="color:var(--red);font-weight:700">סיווג מס: קוד פטור (0%).</span></div>
+      <div class="ditem"><span style="color:var(--blue)">▸</span><span>שמור מספר החשבונית.</span></div>
+    </div>
+    <div class="dcard dap"><div class="dnum">2</div><div class="dttl">מודול ספקים (AP)</div>
+      <div class="ditem"><span style="color:var(--amber)">▸</span><span>הקמת חשבונית ספק מקבילה.</span></div>
+      <div class="ditem"><span style="color:var(--amber)">▸</span><span><strong>מספר:</strong> זהה לשלב 1.</span></div>
+      <div class="ditem"><span style="color:var(--red)">⚠</span><span style="color:var(--red);font-weight:700">סיווג מס: "VAT C".</span></div>
+      <div class="ditem"><span style="color:var(--amber)">▸</span><span>ודא 2 שורות מס (18% ומינוס 18%).</span></div>
+    </div>
+  </div>
+  ${crit('נתוני הזיהוי (מספר עוסק ושם מדויק) חייבים להיות <strong>זהים לחלוטין</strong> בין כרטיס הספק לכרטיס הלקוח.')}`,
+};
+
+/* ══ ROUTING ══ */
+let cur='dashboard';
+function goto(id){
+  if(!PAGES[id])return;
+  cur=id;
+  const m=document.getElementById('main');
+  m.innerHTML=`<div class="fi">${PAGES[id]()}</div>`;
+  m.scrollTop=0;
+  const it=NAV.find(n=>n.id===id);
+  document.getElementById('headerSub').textContent=it?it.label:'מדריך AP/AR';
+  m.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>goto(el.dataset.goto)));
+  buildSide();buildBot();closeDr();
+}
+
+function buildNavTo(container,items){
+  let h='',lg=null;
+  items.forEach(it=>{
+    if(it.group&&it.group!==lg){if(lg!==null)h+='</div>';h+=`<div class="ng"><div class="ngl">${it.group}</div>`;lg=it.group;}
+    else if(!it.group&&lg!==null){h+='</div>';lg=null;}
+    h+=`<button class="ni${it.id===cur?' active':''}" data-id="${it.id}" type="button"><span>${it.icon}</span>${it.label}</button>`;
+  });
+  if(lg!==null)h+='</div>';
+  container.innerHTML=h;
+  container.querySelectorAll('.ni').forEach(el=>el.addEventListener('click',()=>goto(el.dataset.id)));
+}
+
+function buildSide(){buildNavTo(document.getElementById('sidebarNav'),NAV);}
+function buildBot(){
+  const c=document.getElementById('bottomTabs');
+  c.innerHTML=BTABS.map(t=>`<button class="btab${t.id===cur?' active':''}" data-id="${t.id}" type="button"><span class="bti">${t.icon}</span><span class="btl">${t.label}</span></button>`).join('');
+  c.querySelectorAll('.btab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.id==='__more__')openDr();else goto(b.dataset.id);}));
+}
+
+function openDr(){
+  buildNavTo(document.getElementById('drawerNav'),NAV);
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('dov').classList.add('open');
+}
+function closeDr(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('dov').classList.remove('open');
+}
+document.getElementById('dhc').addEventListener('click',closeDr);
+document.getElementById('dov').addEventListener('click',closeDr);
+(function(){let sx=0;const d=document.getElementById('drawer');d.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});d.addEventListener('touchend',e=>{if(e.changedTouches[0].clientX-sx>60)closeDr();},{passive:true});})();
+
+buildSide();buildBot();goto('dashboard');
+</script>
+</body>
+</html>
