@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doron Pickman | Oracle Cloud Finance Consultant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --ink: #1A1814;
+    --ink2: #4A4540;
+    --ink3: #8A8078;
+    --accent: #2A5C3F;
+    --accent-light: #3D7A56;
+    --line: #D8D2C8;
+    --gold: #B8960C;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Frank Ruhl Libre', serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.1rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(247,245,240,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-logo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--ink3);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding: 9rem 3rem 5rem;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    background: rgba(42,92,63,0.08);
+    padding: 0.35rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.1s forwards;
+  }
+
+  .hero-name {
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.25s forwards;
+    color: var(--ink);
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--ink2);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+    max-width: 520px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.55s forwards;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--ink3);
+    margin-top: 0.3rem;
+    display: block;
+    font-weight: 400;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.7s forwards;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.8rem 1.8rem;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 2px;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border: none; }
+  .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,92,63,0.25); }
+  .btn-outline { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* HERO RIGHT — CARD STACK */
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.25s;
+  }
+  .info-card:hover { border-color: var(--accent); transform: translateX(-4px); box-shadow: 4px 0 0 var(--accent); }
+  .info-card-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .info-card-label { font-size: 0.68rem; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.15rem; font-family: 'Fira Code', monospace; }
+  .info-card-value { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 0 3rem;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 5rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  /* HIGHLIGHTS */
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+  }
+
+  .highlight-item {
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    background: var(--surface);
+    transition: background 0.2s;
+  }
+  .highlight-item:hover { background: rgba(42,92,63,0.04); }
+
+  .highlight-num {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+  .highlight-label {
+    font-size: 0.72rem;
+    color: var(--ink3);
+    margin-top: 0.4rem;
+    display: block;
+    font-family: 'Fira Code', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* VALUE CARDS */
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .value-card {
+    background: var(--surface);
+    padding: 2rem;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .value-card:hover { background: rgba(42,92,63,0.03); }
+  .value-card:hover .value-icon { transform: scale(1.1); }
+
+  .value-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; transition: transform 0.2s; }
+  .value-title { font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-bottom: 0.6rem; }
+  .value-desc { font-size: 0.82rem; color: var(--ink3); line-height: 1.75; font-weight: 300; }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 1rem 1.2rem;
+    border-radius: 3px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .skill-card:hover { border-color: var(--accent); background: rgba(42,92,63,0.03); transform: translateY(-2px); }
+  .skill-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+  .skill-name { font-size: 0.82rem; font-weight: 500; color: var(--ink); line-height: 1.3; }
+  .skill-level {
+    font-size: 0.62rem;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-top: 0.2rem;
+    font-family: 'Fira Code', monospace;
+  }
+
+  /* TIMELINE */
+  .timeline { position: relative; }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.5s;
+  }
+  .timeline-item.visible { opacity: 1; transform: translateY(0); }
+  .timeline-item:last-child { border-bottom: none; }
+
+  .timeline-meta { padding-top: 0.15rem; }
+  .timeline-company {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .timeline-date { font-size: 0.75rem; color: var(--ink3); font-weight: 300; }
+
+  .timeline-role { font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.6rem; }
+  .timeline-desc { font-size: 0.85rem; color: var(--ink2); line-height: 1.8; font-weight: 300; margin-bottom: 1rem; }
+
+  .timeline-clients { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .client-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.65rem;
+    background: rgba(42,92,63,0.07);
+    border: 1px solid rgba(42,92,63,0.2);
+    border-radius: 20px;
+    color: var(--accent);
+    font-family: 'Fira Code', monospace;
+  }
+
+  /* EDUCATION */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1rem;
+  }
+
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 1.75rem;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .edu-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .edu-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .edu-degree { font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-bottom: 0.25rem; }
+  .edu-school { font-size: 0.78rem; color: var(--accent); margin-bottom: 0.2rem; }
+  .edu-year { font-size: 0.72rem; color: var(--ink3); font-family: 'Fira Code', monospace; }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 5rem 3rem;
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .contact-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .contact-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+
+  .contact-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .contact-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .contact-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1.1rem 1.5rem;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .contact-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); transform: translateX(-4px); }
+  .contact-card-icon { font-size: 1.2rem; }
+  .contact-card-label { font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Fira Code', monospace; }
+  .contact-card-value { font-size: 0.9rem; color: #fff; font-weight: 400; }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    background: #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-name { font-size: 0.88rem; color: rgba(255,255,255,0.5); }
+  .footer-right { font-size: 0.72rem; color: rgba(255,255,255,0.3); text-align: left; font-family: 'Fira Code', monospace; line-height: 1.9; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 2.5rem; }
+    section { padding: 3.5rem 1.5rem; }
+    .divider { margin: 0 1.5rem; }
+    .highlights { grid-template-columns: repeat(2, 1fr); }
+    .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .contact-section { padding: 3.5rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; padding: 1.5rem; text-align: center; }
+    .footer-right { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Doron Pickman</div>
+  <ul class="nav-links">
+    <li><a href="#about">אודות</a></li>
+    <li><a href="#value">ניסיון</a></li>
+    <li><a href="#skills">מיומנויות</a></li>
+    <li><a href="#experience">קריירה</a></li>
+    <li><a href="#education">השכלה</a></li>
+    <li><a href="#contact">יצירת קשר</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-left">
+    <div class="hero-tag">Senior Oracle Cloud Financial Consultant</div>
+    <h1 class="hero-name">דורון פיקמן</h1>
+    <p class="hero-desc">
+      11 שנות ניסיון ב-Oracle Financials — EBS ו-Fusion.<br>
+      רו"ח בהכשרה, עם רקע של יישומים גלובליים ומיגרציות מורכבות.<br>
+      מומחה Israel Localization.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">11+</span>
+        <span class="stat-label">שנות ניסיון</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">6+</span>
+        <span class="stat-label">לקוחות Enterprise</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">CPA</span>
+        <span class="stat-label">כל הבחינות</span>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#experience" class="btn btn-primary">ניסיון מקצועי ←</a>
+      <a href="#contact" class="btn btn-outline">יצירת קשר</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="info-card">
+      <div class="info-card-icon">☁️</div>
+      <div>
+        <div class="info-card-label">התמחות</div>
+        <div class="info-card-value">Oracle Cloud Fusion · EBS R12/11i</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">💼</div>
+      <div>
+        <div class="info-card-label">תפקיד נוכחי</div>
+        <div class="info-card-value">ONE Technologies — Senior Consultant</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🇮🇱</div>
+      <div>
+        <div class="info-card-label">מומחיות ייחודית</div>
+        <div class="info-card-value">Israel Localization · EMEA</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">⚖️</div>
+      <div>
+        <div class="info-card-label">רקע</div>
+        <div class="info-card-value">CPA · B.A. לוגיסטיקה, בר-אילן</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📍</div>
+      <div>
+        <div class="info-card-label">מיקום</div>
+        <div class="info-card-value">מרכז ישראל · זמין לפרויקטים</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VALUE PROPOSITION -->
+<section id="value">
+  <div class="section-eyebrow">מה אני מביא</div>
+  <h2 class="section-title">שילוב של IT + פיננסים</h2>
+
+  <div class="highlights">
+    <div class="highlight-item">
+      <span class="highlight-num">11+</span>
+      <span class="highlight-label">שנות Oracle</span>
+    </div>
+    <div class="highlight-item">
+      <span class="highlight-num">IT + CPA</span>
+      <span class="highlight-label">שני עולמות</span>
+    </div>
+    <div class="highlight-item">
+      <span class="highlight-num">6+</span>
+      <span class="highlight-label">תעשיות</span>
+    </div>
+    <div class="highlight-item">
+      <span class="highlight-num">IL SME</span>
+      <span class="highlight-label">Localization</span>
+    </div>
+  </div>
+
+  <div class="value-grid">
+    <div class="value-card">
+      <span class="value-icon">🧠</span>
+      <div class="value-title">IT + CPA</div>
+      <div class="value-desc">רקע כפול — הנדסת תהליכים מחד, ואחריות פיננסית וחשבונאית מאידך. מבין את שני הצדדים של כל דרישה.</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">🇮🇱</span>
+      <div class="value-title">Israel Localization</div>
+      <div class="value-desc">ניסיון מעשי בהגדרת מע"מ, ניכוי מס במקור ודיווח רשות המיסים ב-Oracle Cloud Fusion.</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">🔄</span>
+      <div class="value-title">כל סוגי הפרויקטים</div>
+      <div class="value-desc">Greenfield, שדרוג, מיגרציה EBS→Fusion, ותמיכה שוטפת. ניסיון בכל שלבי המחזור — מאפיון ועד Go-Live.</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">🌍</span>
+      <div class="value-title">עומק תעשייתי</div>
+      <div class="value-desc">פארמה, אנרגיה, מזון, הדפסה דיגיטלית, כוח אדם, אלקטרוניקה — פרספקטיבה רחבה שמגיעה עם כל פרויקט.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-eyebrow">מומחיות טכנית</div>
+  <h2 class="section-title">כלים ומודולים</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-icon">☁️</div>
+      <div class="skill-name">Oracle Cloud Fusion</div>
+      <div class="skill-level">5+ YEARS</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🗄️</div>
+      <div class="skill-name">Oracle EBS R12/11i</div>
+      <div class="skill-level">11+ YEARS</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">📒</div>
+      <div class="skill-name">General Ledger (GL)</div>
+      <div class="skill-level">Oracle Financials</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🧾</div>
+      <div class="skill-name">Accounts Payable (AP)</div>
+      <div class="skill-level">Oracle Financials</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">💳</div>
+      <div class="skill-name">Accounts Receivable (AR)</div>
+      <div class="skill-level">Oracle Financials</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🏢</div>
+      <div class="skill-name">Fixed Assets (FA)</div>
+      <div class="skill-level">Oracle Financials</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🏦</div>
+      <div class="skill-name">Cash Management (CE)</div>
+      <div class="skill-level">Oracle Financials</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-name">Oracle Tax & SLA</div>
+      <div class="skill-level">Advanced</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🇮🇱</div>
+      <div class="skill-name">Israel Localization</div>
+      <div class="skill-level">EMEA SME</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🔀</div>
+      <div class="skill-name">Data Migration</div>
+      <div class="skill-level">EBS → Fusion</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🔗</div>
+      <div class="skill-name">Intercompany & Integrations</div>
+      <div class="skill-level">Cross-Module</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🌐</div>
+      <div class="skill-name">NetSuite</div>
+      <div class="skill-level">Certified</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-eyebrow">ניסיון מקצועי</div>
+  <h2 class="section-title">קריירה</h2>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <div class="timeline-company">ONE Technologies</div>
+        <div class="timeline-date">2020 – הווה<br>5+ שנים</div>
+      </div>
+      <div>
+        <div class="timeline-role">Senior Oracle Cloud Financial Consultant</div>
+        <div class="timeline-desc">
+          אפיון וייעול תהליכים פיננסיים ב-Oracle Cloud Fusion. ארכיטקטורת מודולים, הובלת CRP/UAT, הגדרת Functional Spec לפיתוח, ויישום Israel Localization.
+        </div>
+        <div class="timeline-clients">
+          <span class="client-tag">AudioCodes — EBS→Fusion</span>
+          <span class="client-tag">Kornit Digital — Cloud Upgrade</span>
+          <span class="client-tag">ManpowerGroup — Support</span>
+          <span class="client-tag">נוגה — Greenfield</span>
+          <span class="client-tag">Sunrider — Global Rollout</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <div class="timeline-company">Unitask Group</div>
+        <div class="timeline-date">2016 – 2021<br>5 שנים</div>
+      </div>
+      <div>
+        <div class="timeline-role">Oracle ERP Financial Consultant</div>
+        <div class="timeline-desc">
+          תמיכה גלובלית Tier-3 עבור לקוחות Enterprise. SME לכלל מודולי Oracle Financials ואינטגרציות עם מערכות לוויין (CCARS, Model N).
+        </div>
+        <div class="timeline-clients">
+          <span class="client-tag">Teva Pharmaceuticals — Global T3</span>
+          <span class="client-tag">Tnuva — Financial Systems</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <div class="timeline-company">Delek Group</div>
+        <div class="timeline-date">2013</div>
+      </div>
+      <div>
+        <div class="timeline-role">Oracle Financial Implementer</div>
+        <div class="timeline-desc">
+          הטמעת מודולים פיננסיים — AP, GL, CE, FA, AR — בפרויקט Rollout ארגוני.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <div class="timeline-company">Lion Orlitzky · Rosenblum Holtzman</div>
+        <div class="timeline-date">2014 – 2015</div>
+      </div>
+      <div>
+        <div class="timeline-role">CPA Intern</div>
+        <div class="timeline-desc">
+          ביקורת פנים ודוחות כספיים — כולל עבודה עם חברת הפניקס. הרקע החשבונאי שמחזק את כל עבודת Oracle.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-eyebrow">השכלה והכשרה</div>
+  <h2 class="section-title">רקע אקדמי ומקצועי</h2>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-icon">⚖️</div>
+      <div class="edu-degree">לימודי רו"ח (CPA)</div>
+      <div class="edu-school">כל בחינות לשכת רואי החשבון + התמחות</div>
+      <div class="edu-year">הושלם במלואו</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-icon">🎓</div>
+      <div class="edu-degree">B.A. לוגיסטיקה וכלכלה</div>
+      <div class="edu-school">אוניברסיטת בר-אילן</div>
+      <div class="edu-year">תואר ראשון</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-icon">☁️</div>
+      <div class="edu-degree">NetSuite Professional</div>
+      <div class="edu-school">Cloud ERP Certification</div>
+      <div class="edu-year">2020</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-icon">🤖</div>
+      <div class="edu-degree">Oracle Fusion AI Agent Studio</div>
+      <div class="edu-school">Certified Foundations</div>
+      <div class="edu-year">2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="section-eyebrow" style="color:rgba(255,255,255,0.4)">יצירת קשר</div>
+      <h2 class="contact-title">מוכן לשיחה</h2>
+      <p class="contact-sub">
+        מחפש את הפרויקט הבא — מיגרציה, Greenfield, או Oracle Cloud Fusion מורכב.<br>
+        נשמח לדבר.
+      </p>
+    </div>
+    <div class="contact-cards">
+      <a href="mailto:doron.pickman@gmail.com" class="contact-card">
+        <div class="contact-card-icon">📧</div>
+        <div>
+          <div class="contact-card-label">Email</div>
+          <div class="contact-card-value">doron.pickman@gmail.com</div>
+        </div>
+      </a>
+      <a href="https://linkedin.com/in/doronpickman" target="_blank" class="contact-card">
+        <div class="contact-card-icon">💼</div>
+        <div>
+          <div class="contact-card-label">LinkedIn</div>
+          <div class="contact-card-value">linkedin.com/in/doronpickman</div>
+        </div>
+      </a>
+      <div class="contact-card">
+        <div class="contact-card-icon">📍</div>
+        <div>
+          <div class="contact-card-label">מיקום</div>
+          <div class="contact-card-value">מרכז ישראל</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Doron Pickman · Oracle Cloud Finance Consultant</div>
+  <div class="footer-right">
+    GL · AP · AR · FA · CE · SLA · Tax<br>
+    Israel Localization · EMEA · Global Implementations
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+
+  window.addEventListener('scroll', () => {
+    const hint = document.querySelector('.scroll-hint');
+    if (hint && window.scrollY > 100) hint.style.opacity = '0';
+  }, { passive: true });
+</script>
+</body>
+</html>
