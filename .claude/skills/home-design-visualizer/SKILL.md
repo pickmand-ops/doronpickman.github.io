@@ -66,7 +66,7 @@ Propose **2–3 distinct directions** that respect what the user explicitly aske
 
 ## Step 6 — The image
 
-**Default: prompts the user copies.** For each direction give one ready-to-paste block following `references/prompt-templates.md`. Tell the user to upload **two images** to the tool: the original photo first, then the guide image. Then paste the prompt. Recommend which tool to use (see the template file) and keep the instructions short.
+**Default: prompts the user copies.** For each direction give one ready-to-paste block following `references/prompt-templates.md`. Tell the user to upload **two images** to the tool: the original photo first, then the guide image. Then paste the prompt. Recommend which tool to use (see the template file) and keep the instructions short. Name the exact site (chatgpt.com or gemini.google.com) — coding agents like Codex can't generate images — and read the "Pitfalls seen in real use" section of the template file before writing the prompt: inspiration screenshots in particular tend to become the canvas the model edits.
 
 **If an image-generation/editing tool or API key is available in the session** (check for a connected image tool, or env vars like `OPENAI_API_KEY`, `GEMINI_API_KEY`, `REPLICATE_API_TOKEN`), generate the image directly using the same prompt with the original + guide as inputs, and save the result next to the photo. Ask before spending money on a paid API the first time.
 

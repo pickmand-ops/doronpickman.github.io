@@ -49,6 +49,13 @@ Match the room's lighting, add natural shadows, photorealistic.
 - Swap: `Replace the rug with a <...>. Keep everything else identical.`
 - Drift: `Too many things changed. Start again from the original photo and only add <item>.`
 
+## Pitfalls seen in real use
+
+- **Wrong app.** The edit has to happen in a chat app that can generate images: chatgpt.com (regular chat, not Codex or another coding agent), or gemini.google.com. Coding agents such as Codex have no image tool and will answer "I can't create the image". Tell the user which exact site to open.
+- **Upload images, not a zip.** Image tools do not open archives; each photo must be attached on its own.
+- **Inspiration screenshots hijack the edit.** When an Instagram/Pinterest screenshot is attached, models often paint the result *inside that screenshot* (status bar, likes, caption and all), because it is the most "finished-looking" canvas. Prefer describing the inspiration in words. If the user wants to attach it, ask them to crop it to the furniture only first, attach it last, and keep the sentence "Output must use the exact canvas, framing and size of Image 1. Image 3 is only a style reference; never edit or reproduce Image 3."
+- **Most robust fallback:** the single-image variant above with the guide image only. One canvas means nothing to confuse.
+
 ## Tips worth passing to the user (briefly)
 
 - One change per follow-up gives the most control.
