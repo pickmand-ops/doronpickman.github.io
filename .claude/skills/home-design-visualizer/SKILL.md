@@ -83,7 +83,7 @@ Propose **2–3 distinct directions** that respect what the user explicitly aske
 ## Step 7 — Designer review
 
 When there's a result image (generated here, or the user uploads what they got back):
-1. **Scale check**: compare the new object against the guide box (rerun the overlay on the result with the same corners if the camera didn't change). If the sofa came out noticeably bigger/smaller, say so and give a corrective follow-up prompt ("make the sofa narrower so it ends at the left edge of the window frame").
+1. **Scale check**: compare the new object against the guide box (rerun the overlay on the result with the corners scaled to the result's size). First confirm the camera didn't change: check that a fixed landmark (light switch, door frame, fridge edge) sits where it did in the original. Image models often re-crop or shift the view slightly, and then a direct overlay is meaningless; judge by relative proportions instead (unit A vs unit B width, depth vs a known side wall, gap left to the wall's end). If the sofa came out noticeably bigger/smaller, say so and give a corrective follow-up prompt ("make the sofa narrower so it ends at the left edge of the window frame").
 2. **Design critique**, like a good interior designer would: proportion and scale, balance and visual weight, color harmony with floor and existing pieces, lighting layers, texture mix, what's missing (rug size, art height, plants, a lamp in a dark corner), and practical issues (traffic flow, kids/pets, maintenance of the fabric).
 3. **2–4 concrete next steps**, ranked by impact per shekel.
 
