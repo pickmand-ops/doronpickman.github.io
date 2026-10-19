@@ -8,7 +8,7 @@
 | Gemini (Nano Banana / Gemini image) | Very good at preserving the original room exactly; fast iterations | Good for follow-up tweaks ("now change the rug") |
 | Flux Kontext (via sites like fal.ai, Replicate) | Precise local edits | Usually one input image — draw the guide boxes on the photo itself and say "replace the colored boxes" |
 
-Default recommendation: ChatGPT for the first render, Gemini for small follow-up changes.
+Default recommendation: ChatGPT for the first render, Gemini for small follow-up changes. In a real run where the user wanted an exact copy of a reference piece (original + guide + cropped reference, three images), ChatGPT produced a faithful, well-proportioned result while Gemini distorted sizes. Prefer ChatGPT whenever a reference image must be copied.
 
 ## Main template (original + guide image)
 
