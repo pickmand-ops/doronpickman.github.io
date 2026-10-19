@@ -17,11 +17,22 @@ Usage:
 
   --corners  top-left, top-right, bottom-right, bottom-left of the wall, in
              pixels (x,y). "Bottom" is where the wall meets the floor.
-  --item     LABEL:NAME:OFFSET_CM:WIDTH_CM:HEIGHT_CM[:ELEVATION_CM]
+  --item     LABEL:NAME:OFFSET_CM:WIDTH_CM:HEIGHT_CM[:ELEVATION_CM[:DEPTH_CM]]
              OFFSET is the distance from the wall's left edge to the item's
              left edge. ELEVATION lifts the item off the floor (shelves, art,
              TV). Use a short ASCII label (A, B, 1...) for the drawing; NAME
              goes into the printed legend only.
+
+Depth (optional). To draw items as boxes that stick out from the wall, give
+the direction "straight out of the wall" and one known distance along it:
+  --depth-lines "x,y x,y x,y x,y"  two image segments that run perpendicular
+             to the wall in reality (e.g. a side wall's floor line and ceiling
+             line, or floor-tile grout lines); their crossing is the vanishing
+             point of the depth direction.
+  --depth-ref "x,y x,y CM"  a point on the wall's floor line (usually the
+             inner corner) and the image of the point CM straight out from it
+             (e.g. the front end of a side wall whose length is known).
+Then give DEPTH_CM on each item.
 
 Prints a JSON summary (pixel boxes, share of wall width, warnings) to stdout.
 """
@@ -63,14 +74,50 @@ def parse_corners(text):
 
 def parse_item(text):
     parts = text.split(":")
-    if len(parts) not in (5, 6):
-        sys.exit(f"bad --item '{text}', expected LABEL:NAME:OFFSET:WIDTH:HEIGHT[:ELEVATION]")
+    if len(parts) not in (5, 6, 7):
+        sys.exit(f"bad --item '{text}', expected LABEL:NAME:OFFSET:WIDTH:HEIGHT[:ELEVATION[:DEPTH]]")
     label, name = parts[0], parts[1]
     nums = [float(v) for v in parts[2:]]
     offset, width, height = nums[:3]
-    elevation = nums[3] if len(nums) == 4 else 0.0
+    elevation = nums[3] if len(nums) >= 4 else 0.0
+    depth = nums[4] if len(nums) == 5 else 0.0
     return {"label": label, "name": name, "offset_cm": offset, "width_cm": width,
-            "height_cm": height, "elevation_cm": elevation}
+            "height_cm": height, "elevation_cm": elevation, "depth_cm": depth}
+
+
+def line_through(p, q):
+    return np.cross([p[0], p[1], 1.0], [q[0], q[1], 1.0])
+
+
+def depth_mapper(h, lines_text, ref_text):
+    """Return f(wall_x, wall_y, depth_cm) -> pixel for points in front of the wall.
+
+    Planes parallel to the wall, shifted by d along the depth direction, map to
+    the wall's image by the homology I + d*beta*v*l^T, where v is the depth
+    vanishing point and l the wall's vanishing line. beta comes from --depth-ref.
+    """
+    pts = parse_corners(lines_text)
+    v = np.cross(line_through(pts[0], pts[1]), line_through(pts[2], pts[3]))
+    if abs(v[2]) < 1e-9:
+        sys.exit("--depth-lines are parallel in the image; pick lines that converge")
+    v = v / v[2]
+    l = np.cross(h[:, 0], h[:, 1])  # wall's vanishing line: through its x and y vanishing points
+    parts = ref_text.split()
+    if len(parts) != 3:
+        sys.exit("--depth-ref needs 'x,y x,y CM'")
+    (x0, y0), (x1, y1) = (tuple(float(c) for c in p.split(",")) for p in parts[:2])
+    dist = float(parts[2])
+    # x1 = (x0 + t*v) / (1 + t); solve t on the better-conditioned axis
+    tx = (x1 - x0) / (v[0] - x1) if abs(v[0] - x1) > 1e-6 else None
+    ty = (y1 - y0) / (v[1] - y1) if abs(v[1] - y1) > 1e-6 else None
+    t = tx if ty is None or (tx is not None and abs(v[0] - x1) > abs(v[1] - y1)) else ty
+    beta = t / (dist * float(l @ np.array([x0, y0, 1.0])))
+
+    def f(wx, wy, d):
+        p = h @ np.array([wx, wy, 1.0])
+        q = p + d * beta * v * float(l @ p)
+        return float(q[0] / q[2]), float(q[1] / q[2])
+    return f, (float(v[0]), float(v[1]))
 
 
 def load_font(size):
@@ -91,6 +138,8 @@ def main():
     ap.add_argument("--wall-height", type=float, required=True, help="cm, floor to ceiling")
     ap.add_argument("--item", action="append", default=[])
     ap.add_argument("--out", required=True)
+    ap.add_argument("--depth-lines", help="two image segments running straight out of the wall")
+    ap.add_argument("--depth-ref", help="'x,y x,y CM': wall floor point and its image CM out from the wall")
     ap.add_argument("--no-grid", action="store_true", help="skip the 50 cm reference grid")
     args = ap.parse_args()
 
@@ -99,6 +148,12 @@ def main():
     tl, tr, br, bl = parse_corners(args.corners)
     # Wall plane: x to the right from the left edge, y up from the floor.
     h = homography([(0, H), (W, H), (W, 0), (0, 0)], [tl, tr, br, bl])
+
+    depth_at = None
+    if args.depth_lines or args.depth_ref:
+        if not (args.depth_lines and args.depth_ref):
+            sys.exit("--depth-lines and --depth-ref go together")
+        depth_at, vp = depth_mapper(h, args.depth_lines, args.depth_ref)
 
     overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
@@ -130,12 +185,30 @@ def main():
 
         poly = [project(h, x0, y0), project(h, x1, y0), project(h, x1, y1), project(h, x0, y1)]
         color = COLORS[i % len(COLORS)]
-        draw.polygon(poly, fill=color + (90,), outline=color + (255,))
+        d = it["depth_cm"]
+        if d and depth_at is None:
+            summary["warnings"].append(f"{it['label']} has a depth but no --depth-lines/--depth-ref; drawn flat on the wall")
+        if d and depth_at is not None:
+            back = poly
+            front = [depth_at(x0, y0, d), depth_at(x1, y0, d), depth_at(x1, y1, d), depth_at(x0, y1, d)]
+            faces = [
+                [back[0], back[1], front[1], front[0]],  # bottom (floor footprint)
+                [back[3], back[2], front[2], front[3]],  # top
+                [back[0], back[3], front[3], front[0]],  # left side
+                [back[1], back[2], front[2], front[1]],  # right side
+            ]
+            for face in faces:
+                draw.polygon(face, fill=color + (45,))
+                draw.line(face + [face[0]], fill=color + (200,), width=2)
+            poly = front
+            draw.polygon(poly, fill=color + (80,))
+        else:
+            draw.polygon(poly, fill=color + (90,), outline=color + (255,))
         draw.line(poly + [poly[0]], fill=color + (255,), width=4)
         cx = sum(p[0] for p in poly) / 4
         cy = sum(p[1] for p in poly) / 4
         text = it["label"]
-        dims = f"{it['width_cm']:.0f}x{it['height_cm']:.0f}"
+        dims = f"{it['width_cm']:.0f}x{it['height_cm']:.0f}" + (f"x{it['depth_cm']:.0f}" if it["depth_cm"] else "")
         for t, f, dy in ((text, font, -font.size * 0.6), (dims, small, font.size * 0.5)):
             bbox = draw.textbbox((0, 0), t, font=f)
             tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
@@ -154,6 +227,8 @@ def main():
 
     out = Image.alpha_composite(img, overlay).convert("RGB")
     out.save(args.out)
+    if depth_at is not None:
+        summary["depth_vanishing_point"] = [round(c) for c in vp]
     summary["image_size"] = list(img.size)
     summary["out"] = args.out
     print(json.dumps(summary, ensure_ascii=False, indent=2))
