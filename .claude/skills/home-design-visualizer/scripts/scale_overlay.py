@@ -17,7 +17,7 @@ Usage:
 
   --corners  top-left, top-right, bottom-right, bottom-left of the wall, in
              pixels (x,y). "Bottom" is where the wall meets the floor.
-  --item     LABEL:NAME:OFFSET_CM:WIDTH_CM:HEIGHT_CM[:ELEVATION_CM[:DEPTH_CM]]
+  --item     LABEL:NAME:OFFSET_CM:WIDTH_CM:HEIGHT_CM[:ELEVATION_CM[:DEPTH_CM[:DEPTH_START_CM]]]
              OFFSET is the distance from the wall's left edge to the item's
              left edge. ELEVATION lifts the item off the floor (shelves, art,
              TV). Use a short ASCII label (A, B, 1...) for the drawing; NAME
@@ -32,7 +32,10 @@ the direction "straight out of the wall" and one known distance along it:
   --depth-ref "x,y x,y CM"  a point on the wall's floor line (usually the
              inner corner) and the image of the point CM straight out from it
              (e.g. the front end of a side wall whose length is known).
-Then give DEPTH_CM on each item.
+Then give DEPTH_CM on each item. DEPTH_START_CM places an item away from the
+wall (its back face that far out), e.g. a bench along a side wall that begins
+after a desk: OFFSET 0, WIDTH = bench depth, DEPTH = bench length,
+DEPTH_START = where it begins.
 
 Prints a JSON summary (pixel boxes, share of wall width, warnings) to stdout.
 """
@@ -74,15 +77,17 @@ def parse_corners(text):
 
 def parse_item(text):
     parts = text.split(":")
-    if len(parts) not in (5, 6, 7):
-        sys.exit(f"bad --item '{text}', expected LABEL:NAME:OFFSET:WIDTH:HEIGHT[:ELEVATION[:DEPTH]]")
+    if len(parts) not in (5, 6, 7, 8):
+        sys.exit(f"bad --item '{text}', expected LABEL:NAME:OFFSET:WIDTH:HEIGHT[:ELEVATION[:DEPTH[:DEPTH_START]]]")
     label, name = parts[0], parts[1]
     nums = [float(v) for v in parts[2:]]
     offset, width, height = nums[:3]
     elevation = nums[3] if len(nums) >= 4 else 0.0
-    depth = nums[4] if len(nums) == 5 else 0.0
+    depth = nums[4] if len(nums) >= 5 else 0.0
+    depth_start = nums[5] if len(nums) == 6 else 0.0
     return {"label": label, "name": name, "offset_cm": offset, "width_cm": width,
-            "height_cm": height, "elevation_cm": elevation, "depth_cm": depth}
+            "height_cm": height, "elevation_cm": elevation, "depth_cm": depth,
+            "depth_start_cm": depth_start}
 
 
 def line_through(p, q):
@@ -177,20 +182,28 @@ def main():
             summary["warnings"].append(f"{it['label']} ({it['name']}) runs past the wall edge: {x0:.0f}-{x1:.0f} cm on a {W:.0f} cm wall")
         if y1 > H:
             summary["warnings"].append(f"{it['label']} ({it['name']}) is taller than the ceiling: top at {y1:.0f} cm")
+        z0, z1 = it["depth_start_cm"], it["depth_start_cm"] + max(it["depth_cm"], 0.1)
         for other in summary["items"]:
             ox0, ox1 = other["offset_cm"], other["offset_cm"] + other["width_cm"]
             oy0, oy1 = other["elevation_cm"], other["elevation_cm"] + other["height_cm"]
-            if x0 < ox1 and ox0 < x1 and y0 < oy1 and oy0 < y1:
-                summary["warnings"].append(f"{it['label']} overlaps {other['label']} on the wall plane")
+            oz0, oz1 = other["depth_start_cm"], other["depth_start_cm"] + max(other["depth_cm"], 0.1)
+            if x0 < ox1 and ox0 < x1 and y0 < oy1 and oy0 < y1 and z0 < oz1 and oz0 < z1:
+                summary["warnings"].append(f"{it['label']} overlaps {other['label']}")
 
         poly = [project(h, x0, y0), project(h, x1, y0), project(h, x1, y1), project(h, x0, y1)]
         color = COLORS[i % len(COLORS)]
         d = it["depth_cm"]
+        ds = it["depth_start_cm"]
+        if ds and depth_at is None:
+            summary["warnings"].append(f"{it['label']} has a depth start but no --depth-lines/--depth-ref; ignored")
+        if ds and depth_at is not None:
+            poly = [depth_at(x0, y0, ds), depth_at(x1, y0, ds), depth_at(x1, y1, ds), depth_at(x0, y1, ds)]
         if d and depth_at is None:
             summary["warnings"].append(f"{it['label']} has a depth but no --depth-lines/--depth-ref; drawn flat on the wall")
         if d and depth_at is not None:
             back = poly
-            front = [depth_at(x0, y0, d), depth_at(x1, y0, d), depth_at(x1, y1, d), depth_at(x0, y1, d)]
+            dz = ds + d
+            front = [depth_at(x0, y0, dz), depth_at(x1, y0, dz), depth_at(x1, y1, dz), depth_at(x0, y1, dz)]
             faces = [
                 [back[0], back[1], front[1], front[0]],  # bottom (floor footprint)
                 [back[3], back[2], front[2], front[3]],  # top

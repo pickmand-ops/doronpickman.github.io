@@ -66,6 +66,8 @@ The script prints warnings (overflow, overlap, taller than ceiling) — relay th
   --item "A:cabinet:0:30:263:0:40"  # ...:ELEVATION:DEPTH
 ```
 
+An optional 8th field, DEPTH_START, places an item away from the wall (e.g. a bench along a side wall that starts after a 65 cm desk: `"B:bench:0:40:45:0:91:65"`). Skip items that would reach behind the camera; their projection is meaningless.
+
 The script then draws each item as a translucent 3-D box (floor footprint, sides, front face) and prints the depth vanishing point. In the prompt, state the depth in cm and in relation to something visible ("projects 40 cm, about half the depth of the side wall with the light switch").
 
 Items standing away from the wall (coffee table, armchair in the middle) don't live on the wall plane, so the script can't place them precisely. Describe them in the prompt by relation ("coffee table centred in front of the sofa, 45 cm gap, about half the sofa's length") instead.
